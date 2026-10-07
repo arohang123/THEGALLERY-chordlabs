@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>THEGALLERY-ChordLab </title>
+
+    <link rel="stylesheet"
+        href="style.css">
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>🎵 ChordLab</h1>
+
+        <p>
+            Find chords. Build progressions. Make music.
+        </p>
+
+    </header>
+
+
+
+    <!-- CONTROLS -->
+
+    <section class="controls">
+
+
+        <div class="control">
+
+            <label>Key</label>
+
+            <select id="keySelect">
+
+                <option>C</option>
+                <option>D</option>
+                <option>E</option>
+                <option>F</option>
+                <option>G</option>
+                <option>A</option>
+                <option>B</option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="control">
+
+            <label>Scale</label>
+
+            <select id="scaleSelect">
+
+                <option value="major">
+                    Major
+                </option>
+
+                <option value="minor">
+                    Minor
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="control">
+
+            <label>Mood</label>
+
+            <select id="moodSelect">
+
+                <option value="happy">
+                    😊 Happy
+                </option>
+
+                <option value="sad">
+                    😢 Sad
+                </option>
+
+                <option value="emotional">
+                    ❤️ Emotional
+                </option>
+
+                <option value="dark">
+                    🌑 Dark
+                </option>
+
+                <option value="romantic">
+                    💕 Romantic
+                </option>
+
+                <option value="epic">
+                    🔥 Epic
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <div class="control">
+
+            <label>BPM</label>
+
+            <input
+                type="number"
+                id="bpmInput"
+                value="90"
+                min="40"
+                max="240">
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- CHORDS -->
+
+    <section>
+
+        <h2>Available Chords</h2>
+
+        <div
+            id="chordList"
+            class="chord-list">
+
+        </div>
+
+    </section>
+
+<!-- PIANO -->
+
+<section class="piano-section">
+
+    <h2>🎹 Piano</h2>
+
+    <div id="piano" class="piano">
+
+        <button class="white-key" data-note="C">C</button>
+        <button class="black-key" data-note="C#">C#</button>
+
+        <button class="white-key" data-note="D">D</button>
+        <button class="black-key" data-note="D#">D#</button>
+
+        <button class="white-key" data-note="E">E</button>
+
+        <button class="white-key" data-note="F">F</button>
+        <button class="black-key" data-note="F#">F#</button>
+
+        <button class="white-key" data-note="G">G</button>
+        <button class="black-key" data-note="G#">G#</button>
+
+        <button class="white-key" data-note="A">A</button>
+        <button class="black-key" data-note="A#">A#</button>
+
+        <button class="white-key" data-note="B">B</button>
+
+        <button class="white-key" data-note="C2">C</button>
+
+    </div>
+
+</section>
+
+    <!-- PROGRESSION -->
+
+    <section class="progression-section">
+
+        <div class="section-title">
+
+            <h2>Your Progression</h2>
+
+            <button id="clearBtn">
+                Clear
+            </button>
+
+        </div>
+
+
+        <div
+            id="progression"
+            class="progression">
+
+            <span class="empty">
+                Click chords above to build your progression
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- GENERATOR -->
+
+    <section class="generator">
+
+        <h2>✨ Generate Progression</h2>
+
+        <button
+            id="generateBtn"
+            class="generate">
+
+            Generate Random Progression
+
+        </button>
+
+    </section>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        ChordLab 🎵 — Make music easier.
+
+    </footer>
+
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
+<button id="playProgressionBtn">▶️ Play Progression</button>
+<button id="stopProgressionBtn">⏹️ Stop</button>
