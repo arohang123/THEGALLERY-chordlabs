@@ -19,17 +19,38 @@ const notes = [
     "F#", "G", "G#", "A", "A#", "B"
 ];
 
+const scaleIntervals = {
 
-// Major scale intervals
-const majorIntervals = [
-    0, 2, 4, 5, 7, 9, 11
-];
+    major: [0, 2, 4, 5, 7, 9, 11],
 
+    minor: [0, 2, 3, 5, 7, 8, 10],
 
-// Minor scale intervals
-const minorIntervals = [
-    0, 2, 3, 5, 7, 8, 10
-];
+    harmonicMinor: [0, 2, 3, 5, 7, 8, 11],
+
+    melodicMinor: [0, 2, 3, 5, 7, 9, 11],
+
+    majorPentatonic: [0, 2, 4, 7, 9],
+
+    minorPentatonic: [0, 3, 5, 7, 10],
+
+    blues: [0, 3, 5, 6, 7, 10],
+
+    dorian: [0, 2, 3, 5, 7, 9, 10],
+
+    phrygian: [0, 1, 3, 5, 7, 8, 10],
+
+    lydian: [0, 2, 4, 6, 7, 9, 11],
+
+    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+
+    locrian: [0, 1, 3, 5, 6, 8, 10],
+
+    chromatic: [
+        0, 1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10, 11
+    ]
+
+};
 
 
 // Roman numerals
@@ -84,9 +105,8 @@ function getScaleNotes(key, scale) {
     const rootIndex = getNoteIndex(key);
 
     const intervals =
-        scale === "major"
-            ? majorIntervals
-            : minorIntervals;
+        scaleIntervals[scale] ||
+        scaleIntervals.major;
 
     return intervals.map(interval => {
 
@@ -95,9 +115,58 @@ function getScaleNotes(key, scale) {
         ];
 
     });
-
 }
 
+function getScaleChords(scaleNotes) {
+
+    const chords = [];
+
+    // Major 3rd = 4 semitones
+    // Minor 3rd = 3 semitones
+    // Diminished = 3 + 3
+
+    scaleNotes.forEach((root, index) => {
+
+        const third =
+            scaleNotes[(index + 2) % scaleNotes.length];
+
+        const fifth =
+            scaleNotes[(index + 4) % scaleNotes.length];
+
+        const rootIndex = getNoteIndex(root);
+        const thirdIndex = getNoteIndex(third);
+        const fifthIndex = getNoteIndex(fifth);
+
+        const thirdDistance =
+            (thirdIndex - rootIndex + 12) % 12;
+
+        const fifthDistance =
+            (fifthIndex - rootIndex + 12) % 12;
+
+        let quality = "major";
+
+        if (
+            thirdDistance === 3 &&
+            fifthDistance === 6
+        ) {
+            quality = "dim";
+        }
+
+        else if (
+            thirdDistance === 3
+        ) {
+            quality = "minor";
+        }
+
+        chords.push({
+            root: root,
+            quality: quality
+        });
+
+    });
+
+    return chords;
+}
 
 // --------------------------------
 // Create chord name
@@ -120,69 +189,67 @@ function createChordName(note, quality) {
 // --------------------------------
 // Display available chords
 // --------------------------------
+function getRomanNumeral(index) {
+
+    const numerals = [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII"
+    ];
+
+    return numerals[index] || "";
+}
 
 function displayChords() {
 
     const key = keySelect.value;
     const scale = scaleSelect.value;
 
-    const scaleNotes =
-        getScaleNotes(key, scale);
+    const scaleNotes = getScaleNotes(key, scale);
 
-    const degrees =
-        scale === "major"
-            ? majorDegrees
-            : minorDegrees;
-
-    const qualities =
-        scale === "major"
-            ? majorQualities
-            : minorQualities;
-
+    const scaleChords =
+        getScaleChords(scaleNotes);
 
     chordList.innerHTML = "";
 
-
-    scaleNotes.forEach((note, index) => {
+    scaleChords.forEach((chordData, index) => {
 
         const chordName =
             createChordName(
-                note,
-                qualities[index]
+                chordData.root,
+                chordData.quality
             );
-
 
         const chord =
             document.createElement("div");
 
         chord.className = "chord";
 
-
         chord.innerHTML = `
             <div class="name">
                 ${chordName}
             </div>
 
-            <div class="degree">
-                ${degrees[index]}
-            </div>
+           <div class="degree">
+    ${scale === "major"
+        ? majorDegrees[index]
+        : scale === "minor"
+            ? minorDegrees[index]
+            : getRomanNumeral(index)}
+</div> 
         `;
 
-
-        chord.addEventListener(
-            "click",
-            () => {
-
-                addChord(chordName);
-
-            }
-        );
-
+        chord.addEventListener("click", () => {
+            addChord(chordName);
+        });
 
         chordList.appendChild(chord);
 
     });
-
 }
 
 
@@ -244,92 +311,133 @@ const progressions = {
 
     happy: [
         [0, 3, 4, 0],
-        [0, 4, 5, 3]
+        [0, 4, 5, 3],
+        [0, 5, 3, 4],
+        [0, 3, 5, 4],
+        [0, 4, 0, 5],
+        [0, 5, 4, 0],
+        [0, 3, 4, 5],
+        [0, 4, 3, 5]
     ],
 
     sad: [
         [0, 5, 3, 4],
-        [0, 3, 6, 0]
+        [0, 3, 6, 0],
+        [5, 3, 0, 4],
+        [0, 5, 4, 3],
+        [0, 3, 5, 4],
+        [5, 4, 3, 0],
+        [0, 6, 3, 4],
+        [0, 5, 6, 3]
     ],
 
     emotional: [
         [0, 5, 3, 4],
-        [0, 3, 4, 5]
+        [0, 3, 4, 5],
+        [0, 5, 4, 3],
+        [0, 3, 5, 4],
+        [5, 3, 0, 4],
+        [0, 6, 4, 5],
+        [0, 5, 3, 6],
+        [3, 5, 0, 4]
     ],
 
     dark: [
         [0, 5, 6, 4],
-        [0, 3, 6, 5]
+        [0, 3, 6, 5],
+        [0, 6, 5, 4],
+        [0, 5, 3, 6],
+        [6, 5, 3, 0],
+        [0, 6, 3, 5],
+        [5, 3, 6, 0],
+        [0, 3, 5, 6]
     ],
 
     romantic: [
         [0, 3, 5, 4],
-        [0, 5, 3, 4]
+        [0, 5, 3, 4],
+        [0, 4, 5, 3],
+        [0, 3, 4, 5],
+        [5, 3, 4, 0],
+        [0, 5, 4, 3],
+        [3, 5, 0, 4],
+        [0, 4, 3, 5]
     ],
 
     epic: [
         [0, 3, 4, 5],
-        [0, 4, 5, 3]
+        [0, 4, 5, 3],
+        [0, 5, 3, 4],
+        [0, 3, 5, 4],
+        [0, 4, 3, 5],
+        [5, 3, 4, 0],
+        [0, 5, 4, 3],
+        [3, 4, 5, 0]
     ]
-
 };
 
 
-generateBtn.addEventListener(
-    "click",
-    () => {
 
-        const scale =
-            scaleSelect.value;
+generateBtn.addEventListener("click", () => {
 
-        const mood =
-            moodSelect.value;
+    const scale = scaleSelect.value;
+    const mood = moodSelect.value;
 
+    const scaleNotes = getScaleNotes(
+        keySelect.value,
+        scale
+    );
 
-        const scaleNotes =
-            getScaleNotes(
-                keySelect.value,
-                scale
-            );
+    const scaleChords = getScaleChords(scaleNotes);
 
-
-        const qualities =
-            scale === "major"
-                ? majorQualities
-                : minorQualities;
-
-
-        const available =
-            progressions[mood];
-
-
-        const pattern =
-            available[
-                Math.floor(
-                    Math.random() *
-                    available.length
-                )
-            ];
-
-
-        clearBtn.click();
-
-
-        pattern.forEach(index => {
-
-            const chord =
-                createChordName(
-                    scaleNotes[index],
-                    qualities[index]
-                );
-
-
-            addChord(chord);
-
-        });
-
+    if (scaleChords.length < 4) {
+        alert("Progression banauna kamti ma 4 ota notes chahinchha!");
+        return;
     }
-);
+
+    // Mood anusar progression ko style
+    const moodPatterns = {
+        happy: [0, 2, 3, 4],
+        sad: [0, 5, 3, 4],
+        emotional: [0, 5, 2, 3],
+        dark: [0, 2, 5, 3],
+        romantic: [0, 3, 5, 4],
+        epic: [0, 3, 4, 5]
+    };
+
+    const pattern = moodPatterns[mood] || [0, 3, 4, 0];
+
+    // Scale ko length anusar index adjust
+    const length = scaleChords.length;
+
+    const progressionIndexes = pattern.map(index =>
+        index % length
+    );
+
+    // Eutai pattern sadhai naaaos bhanera shuffle
+    for (let i = progressionIndexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [progressionIndexes[i], progressionIndexes[j]] =
+            [progressionIndexes[j], progressionIndexes[i]];
+    }
+
+    clearBtn.click();
+
+    progressionIndexes.forEach(index => {
+
+        const chordData = scaleChords[index];
+
+        const chordName = createChordName(
+            chordData.root,
+            chordData.quality
+        );
+
+        addChord(chordName);
+
+    });
+
+});
+
 
 
 // --------------------------------
