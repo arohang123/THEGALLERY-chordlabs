@@ -274,3 +274,27 @@ footer {
     box-shadow: 0 0 20px #8b5cf6;
     transform: translateY(-4px);
 }
+
+
+.scale-notes-section {
+    margin: 24px 0;
+}
+
+.scale-notes-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.scale-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.scale-note {
+    font-size: 32px;
+    font-weight: 600;
+    color: #f3e8ff;
+    padding: 4px 8px;
+}
+

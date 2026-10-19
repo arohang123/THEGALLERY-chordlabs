@@ -250,6 +250,18 @@ function displayChords() {
         chordList.appendChild(chord);
 
     });
+
+
+const scaleNotesDisplay =
+    document.getElementById("scaleNotes");
+
+if (scaleNotesDisplay) {
+    scaleNotesDisplay.innerHTML = scaleNotes
+        .map(note => `<span class="scale-note">${note}</span>`)
+        .join("");
+}
+  
+
 }
 
 
@@ -675,6 +687,8 @@ let playTimer = null;
 
 const playBtn = document.getElementById("playProgressionBtn");
 const stopBtn = document.getElementById("stopProgressionBtn");
+
+
 
 playBtn.addEventListener("click", () => {
 
